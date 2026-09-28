@@ -1,0 +1,21 @@
+[package]
+name = "cph-extension"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+# The root package is the Zed extension itself because Zed's dev build parses
+# [package].name from the root Cargo.toml and runs a plain `cargo build` here.
+# default-members keeps the native helper out of Zed's wasm32-wasip2 build.
+[workspace]
+members = ["crates/helper"]
+default-members = ["."]
+
+[dependencies]
+zed_extension_api = "0.7.0"
+
+[profile.release]
+lto = true
+strip = true

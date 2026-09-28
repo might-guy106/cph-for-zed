@@ -1,0 +1,17 @@
+id = "cph"
+name = "Competitive Programming Helper"
+version = "0.1.0"
+schema_version = 1
+authors = ["might-guy106"]
+description = "Competitive programming helper: receives problems from Competitive Companion and runs sample tests."
+repository = "https://github.com/might-guy106/cph-for-zed"
+
+# The companion daemon (HTTP receiver on :27121) is registered as a
+# language server so Zed auto-starts it when a C/C++ buffer opens and
+# owns its lifecycle. It speaks a minimal LSP handshake over stdio.
+[language_servers.cph]
+languages = ["C++", "C"]
+
+capabilities = [
+  { kind = "download_file", host = "github.com", path = ["**"] },
+]

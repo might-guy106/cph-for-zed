@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip2
+
+      # judge integration tests compile solutions with g++-16; brew's gcc
+      # formula currently provides exactly that binary name
+      - run: brew install gcc
+
+      - run: cargo test -p cph-helper
+
+      - name: extension builds for wasm (same command Zed runs)
+        run: cargo build --target wasm32-wasip2
