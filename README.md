@@ -100,9 +100,11 @@ does the arranging (Zed has no pane API for extensions/CLI). The keymap
 entries (already added to `~/.config/zed/keymap.json`):
 
 ```json
-"alt-l": ["workspace::SendKeystrokes", "ctrl-0 ctrl-alt-down cmd-k cmd-up ctrl-0 ctrl-alt-right cmd-k cmd-left"],
+"alt-l": ["workspace::SendKeystrokes", "ctrl-2 ctrl-alt-m ctrl-alt-left ctrl-1 ctrl-alt-m ctrl-alt-down ctrl-alt-up ctrl-alt-left"],
+"ctrl-alt-m": ["workspace::MoveItemToPaneInDirection", { "direction": "right" }],
 "ctrl-alt-down": "pane::SplitAndMoveDown",
-"ctrl-alt-right": "pane::SplitAndMoveRight"
+"ctrl-alt-up": "workspace::ActivatePaneUp",
+"ctrl-alt-left": "workspace::ActivatePaneLeft"
 ```
 
 
