@@ -81,7 +81,7 @@ pub fn receive(root: &Path, body: &[u8]) -> Result<PathBuf, String> {
             include_str!("../../../templates/single.cpp")
         };
         fs::write(&sol, template).map_err(|e| format!("write {}: {e}", sol.display()))?;
-        open_in_zed(&sol);
+        open_in_zed(&dir, &sol);
     }
 
     write_tests(&dir, &problem.tests)?;
@@ -180,12 +180,23 @@ fn write_tests(dir: &Path, tests: &[Test]) -> Result<(), String> {
     Ok(())
 }
 
-/// Ask a running Zed to open the new solution file (best effort).
-fn open_in_zed(path: &Path) {
+/// Ask a running Zed to open the new solution alongside its first sample
+/// (01.in / 01.out) so the user gets the classic three-pane contest layout
+/// with one keypress (see README: alt-l). Files open as tabs, last one active.
+fn open_in_zed(problem_dir: &Path, sol: &Path) {
+    let mut paths: Vec<&Path> = vec![sol];
+    let input = problem_dir.join("01.in");
+    let output = problem_dir.join("01.out");
+    if input.exists() {
+        paths.push(&input);
+    }
+    if output.exists() {
+        paths.push(&output);
+    }
     for zed in ["/usr/local/bin/zed", "/opt/homebrew/bin/zed"] {
         if Path::new(zed).exists() {
             let _ = std::process::Command::new(zed)
-                .arg(path)
+                .args(&paths)
                 .stdout(std::process::Stdio::null())
                 .stderr(std::process::Stdio::null())
                 .spawn();

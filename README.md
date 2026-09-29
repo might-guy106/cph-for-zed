@@ -81,6 +81,31 @@ file open before the first Competitive Companion click, or run the
 
 Re-parsing a problem refreshes tests but never overwrites your `sol.cpp`.
 
+## Three-pane layout (one keypress)
+
+When a problem arrives, the daemon opens `sol.cpp`, `01.in` and `01.out` as
+tabs (in that order, last one active). Press `alt-l` to arrange them into the
+classic contest layout — sol left, input right-top, output right-bottom:
+
+```
+ alt-l  →  [01.out moves to a bottom split]
+        →  [focus returns to the top pane, where 01.in is now active]
+        →  [01.in moves to a right split]
+        →  [focus lands on sol.cpp]
+```
+
+This uses Zed's `workspace::SendKeystrokes` macro action plus two
+`pane::SplitAndMove*` bindings. The daemon only opens the tabs; the keypress
+does the arranging (Zed has no pane API for extensions/CLI). The keymap
+entries (already added to `~/.config/zed/keymap.json`):
+
+```json
+"alt-l": ["workspace::SendKeystrokes", "ctrl-alt-down cmd-k cmd-up ctrl-alt-right cmd-k cmd-left"],
+"ctrl-alt-down": "pane::SplitAndMoveDown",
+"ctrl-alt-right": "pane::SplitAndMoveRight"
+```
+
+
 ## Settings — `cph.toml` at the project root (all optional)
 
 ```toml
