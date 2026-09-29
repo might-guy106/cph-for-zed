@@ -81,10 +81,14 @@ pub fn receive(root: &Path, body: &[u8]) -> Result<PathBuf, String> {
             include_str!("../../../templates/single.cpp")
         };
         fs::write(&sol, template).map_err(|e| format!("write {}: {e}", sol.display()))?;
-        open_in_zed(&dir, &sol);
     }
 
     write_tests(&dir, &problem.tests)?;
+
+    // Always (re)open the trio so the alt-l layout key has its tabs,
+    // even when re-parsing an existing problem. Zed just re-activates
+    // tabs that are already open; sol.cpp is never overwritten.
+    open_in_zed(&dir, &sol);;
 
     if !problem.url.is_empty() {
         let _ = fs::write(dir.join("problem.url"), format!("{}\n", problem.url));

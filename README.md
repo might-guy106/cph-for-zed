@@ -88,8 +88,8 @@ tabs (in that order, last one active). Press `alt-l` to arrange them into the
 classic contest layout — sol left, input right-top, output right-bottom:
 
 ```
- alt-l  →  [01.out moves to a bottom split]
-        →  [focus returns to the top pane, where 01.in is now active]
+ alt-l  →  [select last tab (01.out), move it to a bottom split]
+        →  [focus returns to the top pane; select its last tab (01.in)]
         →  [01.in moves to a right split]
         →  [focus lands on sol.cpp]
 ```
@@ -100,7 +100,7 @@ does the arranging (Zed has no pane API for extensions/CLI). The keymap
 entries (already added to `~/.config/zed/keymap.json`):
 
 ```json
-"alt-l": ["workspace::SendKeystrokes", "ctrl-alt-down cmd-k cmd-up ctrl-alt-right cmd-k cmd-left"],
+"alt-l": ["workspace::SendKeystrokes", "ctrl-0 ctrl-alt-down cmd-k cmd-up ctrl-0 ctrl-alt-right cmd-k cmd-left"],
 "ctrl-alt-down": "pane::SplitAndMoveDown",
 "ctrl-alt-right": "pane::SplitAndMoveRight"
 ```
