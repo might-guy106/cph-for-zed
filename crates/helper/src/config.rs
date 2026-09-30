@@ -9,6 +9,7 @@ pub struct Config {
     pub cxx: Option<String>,
     pub cxxflags: Option<String>,
     pub timeout_ms: Option<u64>,
+    pub notify: Option<bool>,
 }
 
 pub const DEFAULT_CXX: &str = "g++-16";
@@ -31,6 +32,10 @@ impl Config {
 
     pub fn timeout_ms(&self) -> u64 {
         self.timeout_ms.unwrap_or(DEFAULT_TIMEOUT_MS)
+    }
+
+    pub fn notify(&self) -> bool {
+        self.notify.unwrap_or(true)
     }
 }
 

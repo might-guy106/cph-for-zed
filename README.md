@@ -114,6 +114,7 @@ entries (already added to `~/.config/zed/keymap.json`):
 cxx        = "g++-16"
 cxxflags   = "-std=c++17 -O2 -Wall -Winvalid-pch"
 timeout_ms = 3000
+notify     = true   # macOS notification on all-pass; set false to disable
 ```
 
 Note: `cxxflags` must match the flags the precompiled `bits/stdc++.h.gch`
@@ -126,6 +127,9 @@ rebuild the PCH (`make pch` from the dsa Makefile).
 exit or signal · `TLE` over `timeout_ms` (default 3s) · compile errors
 shown raw. Output compare: whole-text trim, line count must match, each
 line trimmed (trailing whitespace / CRLF / final newline don't matter).
+On a full pass you get a bold green banner (`ALL TESTS PASSED (n/n)` with
+the slowest test time) plus a macOS notification with sound — the terminal
+task pane auto-hides on success, so the notification is the durable signal.
 Exit code 0 iff all pass.
 
 ## Development

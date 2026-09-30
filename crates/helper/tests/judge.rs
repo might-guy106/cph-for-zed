@@ -49,7 +49,7 @@ fn all_pass_exit_0() {
     write(&dir, "02.out", "30\n");
     let (code, log) = judge(&dir, "sol.cpp");
     assert_eq!(code, 0, "{log}");
-    assert!(log.contains("2/2 passed"), "{log}");
+    assert!(log.contains("ALL TESTS PASSED (2/2)"), "{log}");
 }
 
 #[test]

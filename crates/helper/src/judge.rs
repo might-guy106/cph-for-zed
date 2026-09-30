@@ -13,6 +13,7 @@ const GREEN: &str = "\x1b[32m";
 const RED: &str = "\x1b[31m";
 const YELLOW: &str = "\x1b[33m";
 const DIM: &str = "\x1b[2m";
+const BOLD: &str = "\x1b[1m";
 const RESET: &str = "\x1b[0m";
 
 pub struct Options {
@@ -63,10 +64,12 @@ pub fn run(src: &Path, opts: &Options) -> i32 {
     }
 
     let mut passed = 0;
+    let mut max_ms = 0u128;
     for input in &tests {
         let n = input.file_stem().unwrap().to_string_lossy().to_string();
         let expected = input.with_extension("out");
         let outcome = run_one(&bin, input, Duration::from_millis(cfg.timeout_ms()));
+        max_ms = max_ms.max(outcome.elapsed.as_millis());
         let ok = report(&n, &expected, &outcome);
         if ok {
             passed += 1;
@@ -74,15 +77,14 @@ pub fn run(src: &Path, opts: &Options) -> i32 {
     }
 
     let total = tests.len();
-    let (color, mark) = if passed == total {
-        (GREEN, "✓")
-    } else {
-        (RED, "✗")
-    };
-    eprintln!("{color}{mark} {passed}/{total} passed{RESET}");
     if passed == total {
+        banner(passed, total, max_ms);
+        if cfg.notify() {
+            notify_pass(&problem_name(src), passed, total);
+        }
         0
     } else {
+        eprintln!("{RED}✗ {passed}/{total} passed{RESET}");
         1
     }
 }
@@ -227,6 +229,35 @@ fn report(n: &str, expected: &Path, outcome: &RunOutcome) -> bool {
             false
         }
     }
+}
+
+/// Big unmissable all-pass banner, since the task terminal may auto-hide.
+fn banner(passed: usize, total: usize, max_ms: u128) {
+    let line1 = format!("✓ ALL TESTS PASSED ({passed}/{total})");
+    let line2 = format!("slowest test: {max_ms}ms");
+    let width = line1.chars().count().max(line2.chars().count()) + 2;
+    let bar = "═".repeat(width);
+    let pad = |line: &str| format!("║ {line}{}║", " ".repeat(width - line.chars().count() - 1));
+    eprintln!("{GREEN}{BOLD}  ╔{bar}╗");
+    eprintln!("  {}", pad(&line1));
+    eprintln!("  {}", pad(&line2));
+    eprintln!("  ╚{bar}╝{RESET}");
+}
+
+fn problem_name(src: &Path) -> String {
+    src.parent()
+        .and_then(|d| d.file_name())
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_else(|| "problem".into())
+}
+
+/// Durable all-pass signal that survives the terminal auto-hiding:
+/// a macOS notification with a sound.
+fn notify_pass(problem: &str, passed: usize, total: usize) {
+    let script = format!(
+        "display notification \"{passed}/{total} test cases passed\" with title \"cph ✓ {problem}\" sound name \"Glass\""
+    );
+    let _ = Command::new("osascript").arg("-e").arg(&script).spawn();
 }
 
 fn print_stderr(stderr: &[u8]) {
