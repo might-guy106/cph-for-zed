@@ -40,7 +40,7 @@ fn tasks_json(exe: &str) -> String {
     "use_new_terminal": false,
     "allow_concurrent_runs": true,
     "reveal": "always",
-    "hide": "on_success",
+    "hide": "never",
     "save": "current"
   }},
   {{
