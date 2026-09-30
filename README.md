@@ -144,4 +144,4 @@ After changing `src/lib.rs` or `extension.toml`: palette →
 **zed: install dev extension** again. Helper changes need no reinstall —
 just rebuild.
 
-Layout, milestones and research: `PLAN.md`, `research/`.
+Full documentation: [`docs/index.md`](docs/index.md).
